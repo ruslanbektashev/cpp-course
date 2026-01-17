@@ -1,38 +1,37 @@
-#ifndef COUNTER_HPP
-#define COUNTER_HPP
 
-
+#pragma once
 #include <iostream>
 #include <cstdlib>
 #include <cstdint>
 #include <vector>
 #include <map>
 
-
-template <typename T> class SparseMatrixNew;
+template <typename T>
+class SparseMatrixNew;
 
 template <typename T>
 class MatrixN_1DimProxy
 {
     SparseMatrixNew<T> &matrix;
-    std::vector<uint64_t> coords;
+    std::unique_ptr<std::vector<uint64_t>> coords_ptr = std::make_unique<std::vector<uint64_t>>;
 
 public:
-    MatrixN_1DimProxy(SparseMatrixNew<T> &matrix, std::vector<uint64_t> coords) : matrix(matrix), coords(coords) {}
+    MatrixN_1DimProxy(SparseMatrixNew<T> &matrix, std::unique_ptr<std::vector<uint64_t>> coords) : matrix(matrix), coords_ptr(std::move(coords)) {}
 
     MatrixN_1DimProxy<T> operator[](uint64_t n_1_coord)
     {
-        coords.push_back(n_1_coord);
-        return MatrixN_1DimProxy<T>(matrix, coords);
+        coords_ptr->push_back(n_1_coord);
+        return MatrixN_1DimProxy<T>(matrix, std::move(coords_ptr));
     }
     MatrixN_1DimProxy<T> &operator=(T value)
     {
-        matrix.addValue(value, coords);
+        matrix.addValue(value, *coords_ptr);
         return *this;
     }
+
     operator T() const
     {
-        return matrix.getValue(coords);
+        return matrix.getValue(*coords_ptr);
     }
 };
 
@@ -47,10 +46,12 @@ public:
 
     MatrixN_1DimProxy<T> operator[](uint64_t n_coord)
     {
-        std::vector<uint64_t> coord;
-        coord.push_back(n_coord);
-        return MatrixN_1DimProxy<T>(*this, coord);
+        auto coord = std::make_unique<std::vector<uint64_t>>();
+        coord->push_back(n_coord);
+        return MatrixN_1DimProxy<T>(*this, std::move(coord));
     }
+
+    using iterator = typename std::map<std::vector<uint64_t>, T>::iterator;
 
     void addValue(T value, std::vector<uint64_t> coords)
     {
@@ -85,11 +86,16 @@ public:
         std::cout << "\n";
     }
 
-    int countNonDefault() const
+    int size() const
     {
         return values.size();
     }
+    iterator begin()
+    {
+        return values.begin();
+    }
+    iterator end()
+    {
+        return values.end();
+    }
 };
-
-
-#endif
