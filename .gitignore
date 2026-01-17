@@ -77,3 +77,6 @@ Generated\ Files/
 .DS_Store
 a.out
 app
+
+# Other Files
+*.pdb
