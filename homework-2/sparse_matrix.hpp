@@ -7,6 +7,7 @@
 #include <map>
 #include <stdexcept>
 #include <string>
+#include <memory>
 
 template <typename T>
 class SparseMatrixNew;
