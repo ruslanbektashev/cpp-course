@@ -41,7 +41,6 @@ int main() {
         testMatrix[i][9 - i] = 9 - i;
     }
     
-    // 3. Вывод фрагмента матрицы от [1,1] до [8,8]
     std::cout << "\n3. Фрагмент матрицы от [1,1] до [8,8]:" << std::endl;
     for (int i = 1; i <= 8; ++i) {
         for (int j = 1; j <= 8; ++j) {
@@ -53,10 +52,8 @@ int main() {
         std::cout << std::endl;
     }
     
-    // 4. Вывод количества занятых ячеек
     std::cout << "\n4. Количество занятых ячеек: " << testMatrix.size() << std::endl;
     
-    // 5. Вывод всех занятых ячеек вместе со своими позициями
     std::cout << "\n5. Все занятые ячейки вместе со своими позициями:" << std::endl;
     for (auto cell : testMatrix) {
         int row, col, value;
