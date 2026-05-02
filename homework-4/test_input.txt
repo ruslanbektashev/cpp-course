@@ -1,0 +1,5 @@
+192.168.1.1	ignore1	ignore2
+10.0.0.5	data	more_data
+256.0.0.1	bad	ip
+invalid_ip	test	test
+127.0.0.1	localhost	ignore

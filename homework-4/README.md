@@ -51,7 +51,19 @@ cat data/ip_filter.tsv | ./<your_program> | md5sum
 актуален только для Linux-систем. В случае, если Ваша рабочая система Windows, придумайте
 способ, как проверить реализацию, имея эталонный результат только для Linux.
 
+Дописал:
+1. Прогон и сохранение вывода:
+cmd /c ".\program.exe < data\ip_filter.tsv > out.txt"
+2. MD5 как на Linux (заменяем \r\n → \n и считаем хэш):
+python -c "import hashlib; d=open('out.txt','rb').read().replace(b'\r\n',b'\n'); print(hashlib.md5(d).hexdigest())"
+
+или:
+cmd /c ".\program.exe < data\ip_filter.tsv" | python -c "import sys,hashlib; d=sys.stdin.buffer.read().replace(b'\r\n',b'\n'); print(hashlib.md5(d).hexdigest())"
+
 ## 3. Комплект поставки решения
 
 `main.cpp` с реализацией программы фильтрации IP-адресов.
 Допускается разбиение проекта на большее кол-во файлов, но в таком случае дополнительно нужно предоставить возможность собрать проект через CMake (см. пример в первой задаче).
+
+запуск программы: 
+$env:PATH = "C:\msys64\mingw64\bin;" + $env:PATH; cmd /c ".\program.exe < data\ip_filter.tsv > result.txt"
